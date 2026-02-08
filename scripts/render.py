@@ -9,6 +9,35 @@ def load_config(path="config/scene.yaml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
 
+def normalize_scene_config(cfg: dict) -> dict:
+    """
+    Derive finite-plane bounds from Unity plane parameters when provided.
+    Unity Plane is base_size x base_size in XZ at scale (1,1,1).
+    """
+    for obj in cfg.get("objects", []):
+        if obj.get("type") != "plane":
+            continue
+        if not obj.get("finite", False):
+            
+            continue
+        
+        up = obj.get("unity_plane")
+        if not up:
+            continue
+        base = float(up.get("base_size", 10.0))
+        sx, _, sz = up["scale"]
+
+        half_wx = (base * float(sx)) / 2.0
+        half_dz = (base * float(sz)) / 2.0
+
+        # plane point is [x, y, z] -> bounds center is [x, z]
+        px, _, pz = obj["point"]
+        obj["bounds_xz"] = {
+            "center": [float(px), float(pz)],
+            "half_size": [half_wx, half_dz],
+        }
+    return cfg
+
 
 def rgb8_tuple(rgb):
     return (int(rgb[0]), int(rgb[1]), int(rgb[2]))
@@ -16,6 +45,7 @@ def rgb8_tuple(rgb):
 
 def main():
     cfg = load_config()
+    cfg = normalize_scene_config(cfg)
 
     preset = cfg["render"]["active_preset"]
     res = cfg["render"]["resolution_presets"][preset]
@@ -78,6 +108,7 @@ def main():
                         material_name=obj["material"],
                         t_min=t_min,
                         t_max=closest_t,
+                        bounds_xz=obj.get("bounds_xz") if obj.get("finite", False) else None
                     )
                 else:
                     hit = None

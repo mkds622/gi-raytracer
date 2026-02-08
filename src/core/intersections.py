@@ -41,17 +41,23 @@ def intersect_sphere(ray: Ray, center: Vec3, radius: float, material_name: str, 
     return Hit(t=t_hit, point=p, normal=n, material_name=material_name)
 
 
-def intersect_plane(ray: Ray, point: Vec3, normal: Vec3, material_name: str, t_min: float, t_max: float) -> Optional[Hit]:
-    # plane: (X - point)·normal = 0
+def intersect_plane(ray, point, normal, material_name, t_min, t_max, bounds_xz=None):
     denom = normal.dot(ray.direction)
     if abs(denom) < 1e-8:
         return None
+
     t = (point - ray.origin).dot(normal) / denom
     if not (t_min < t < t_max):
         return None
+
     p = ray.at(t)
+
+    if bounds_xz is not None:
+        cx, cz = bounds_xz["center"]
+        hx, hz = bounds_xz["half_size"]
+        if not (cx - hx <= p.x <= cx + hx and cz - hz <= p.z <= cz + hz):
+            return None
+
     n = normal.normalized()
-    # Ensure normal faces against the ray (optional but nice)
-    if n.dot(ray.direction) > 0:
-        n = n * -1.0
     return Hit(t=t, point=p, normal=n, material_name=material_name)
+

@@ -25,8 +25,8 @@ camera:
       position: [1.0, 0.75, 3.0]
       look_at: [1.0, 0.75, 2.0]
     alt:
-      position: [-3, 3, 3.5]
-      look_at: [0.5, 0.7, -5.0]
+      position: [-3, 2, 6]
+      look_at: [-1, 1.5, -20.0]
   active_camera: "alt"
   up: [0.0, 1.0, 0.0]
   fov_y_degrees: 60.0
@@ -66,7 +66,10 @@ objects:
 
   - type: "plane"
     name: "floor"
-    point: [0.0, 0.0, 0.0]
+    point: [-18.4, 0.0, -18.0] 
     normal: [0.0, 1.0, 0.0]
     material: "floor"
-    finite: false  # stretch goal later
+    finite: Tr
+    unity_plane:
+      base_size: 10.0             # Unity Plane is 10x10 at scale (1,1,1)
+      scale: [4.0, 1.0, 4.0] 
