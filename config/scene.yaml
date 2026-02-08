@@ -5,7 +5,6 @@ meta:
     y: "up"
     z: "forward"
   notes:
-    - "Checkpoint 2 uses vector math only (no matrices yet)."
     - "Virtual screen derived from FOV + aspect at distance d."
 
 render:
@@ -71,5 +70,5 @@ objects:
     material: "floor"
     finite: Tr
     unity_plane:
-      base_size: 10.0             # Unity Plane is 10x10 at scale (1,1,1)
+      base_size: 10.0            
       scale: [4.0, 1.0, 4.0] 
