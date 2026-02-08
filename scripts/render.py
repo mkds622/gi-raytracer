@@ -123,7 +123,7 @@ def main():
                 albedo = mats[hit_material]["albedo_rgb8"]
                 pix[i, j] = rgb8_tuple(albedo)
 
-    out_path = "outputs/checkpoint2_alt.png"
+    out_path = "outputs/checkpoint2.png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 
