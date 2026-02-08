@@ -20,9 +20,14 @@ render:
   samples_per_pixel: 1
 
 camera:
-  position: [1.0, 0.75, 3.0]
-  # You provided rotation yaw=180; for ray generation we’ll use look_at explicitly:
-  look_at: [1.0, 0.75, 2.0]
+  presets:
+    baseline:
+      position: [1.0, 0.75, 3.0]
+      look_at: [1.0, 0.75, 2.0]
+    alt:
+      position: [-3, 3, 3.5]
+      look_at: [0.5, 0.7, -5.0]
+  active_camera: "alt"
   up: [0.0, 1.0, 0.0]
   fov_y_degrees: 60.0
   focal_distance: 1.0

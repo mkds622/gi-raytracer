@@ -23,9 +23,11 @@ def main():
     aspect = width / float(height)
 
     cam_cfg = cfg["camera"]
+    active_cam_preset = cam_cfg["active_camera"]
+    active_cam_preset_data = cam_cfg["presets"][active_cam_preset]
     cam = Camera(
-        position=Vec3(*cam_cfg["position"]),
-        look_at=Vec3(*cam_cfg["look_at"]),
+        position=Vec3(*active_cam_preset_data["position"]),
+        look_at=Vec3(*active_cam_preset_data["look_at"]),
         up=Vec3(*cam_cfg.get("up", [0.0, 1.0, 0.0])),
         fov_y_degrees=float(cam_cfg["fov_y_degrees"]),
         aspect=aspect,
@@ -90,7 +92,7 @@ def main():
                 albedo = mats[hit_material]["albedo_rgb8"]
                 pix[i, j] = rgb8_tuple(albedo)
 
-    out_path = "outputs/checkpoint2.png"
+    out_path = "outputs/checkpoint2_alt.png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 
