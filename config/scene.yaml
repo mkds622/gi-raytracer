@@ -1,0 +1,67 @@
+meta:
+  coordinate_system: "unity_like"
+  axes:
+    x: "right"
+    y: "up"
+    z: "forward"
+  notes:
+    - "Checkpoint 2 uses vector math only (no matrices yet)."
+    - "Virtual screen derived from FOV + aspect at distance d."
+
+render:
+  resolution_presets:
+    quick:
+      width: 960
+      height: 540
+    high:
+      width: 2560
+      height: 1440
+  active_preset: "quick"
+  samples_per_pixel: 1
+
+camera:
+  position: [1.0, 0.75, 3.0]
+  # You provided rotation yaw=180; for ray generation we’ll use look_at explicitly:
+  look_at: [1.0, 0.75, 2.0]
+  up: [0.0, 1.0, 0.0]
+  fov_y_degrees: 60.0
+  focal_distance: 1.0
+
+background:
+  mode: "solid"   # later: "gradient"
+  color_rgb8: [135, 206, 235]
+
+lights:
+  - type: "point"
+    position: [0.0, 3.0, 1.0]
+    color_rgb8: [255, 255, 255]
+    intensity: 1.0
+    range: 10.0
+
+materials:
+  sphere1:
+    albedo_rgb8: [240, 240, 240]
+  sphere2:
+    albedo_rgb8: [170, 170, 170]
+  floor:
+    albedo_rgb8: [170, 50, 50]
+
+objects:
+  - type: "sphere"
+    name: "sphere1"
+    center: [-0.2, 0.5, 1.0]
+    radius: 0.5
+    material: "sphere1"
+
+  - type: "sphere"
+    name: "sphere2"
+    center: [0.8, 0.85, 0.6]
+    radius: 0.5
+    material: "sphere2"
+
+  - type: "plane"
+    name: "floor"
+    point: [0.0, 0.0, 0.0]
+    normal: [0.0, 1.0, 0.0]
+    material: "floor"
+    finite: false  # stretch goal later
