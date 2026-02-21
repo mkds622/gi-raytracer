@@ -7,3 +7,9 @@ A small ray tracer focused on correctness, clarity, and reproducibility.
 
 Run:
 python scripts/render.py
+
+
+To-Do:
+- Make everything object oriented like in ppt.
+- Maybe make background gradient
+- Add one or two more primitives like cone or cylinder
