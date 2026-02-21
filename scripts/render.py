@@ -6,6 +6,7 @@ from src.core.camera import Camera
 from src.core.world import World
 from src.objects.sphere import Sphere
 from src.objects.plane import Plane
+from src.core.light import PointLight
 
 
 def load_config(path="config/scene.yaml"):
@@ -75,6 +76,17 @@ def main():
 
     # Materials
     mats = cfg["materials"]
+
+    # Parse lights
+    lights = []
+    for l in cfg["lights"]:
+        if l["type"] == "point":
+            lights.append(
+                PointLight(
+                    position=Vec3(*l["position"]),
+                    color=Vec3(*l["color_rgb"]),
+                )
+            )
 
     # Build World
     world = World()
