@@ -3,6 +3,7 @@ import math
 from dataclasses import dataclass
 from src.math.vec3 import Vec3
 from src.core.ray import Ray
+from src.shaders.phong import PhongMaterial, shade_phong
 
 
 @dataclass(frozen=True)
@@ -13,6 +14,30 @@ class Camera:
     fov_y_degrees: float
     aspect: float
     focal_distance: float = 1.0
+
+    def _clamp01(self, x: float) -> float:
+        return 0.0 if x < 0.0 else 1.0 if x > 1.0 else x
+
+
+    def _vec3_to_rgb8(self, c: Vec3) -> tuple[int, int, int]:
+        return (
+            int(round(self._clamp01(c.x) * 255)),
+            int(round(self._clamp01(c.y) * 255)),
+            int(round(self._clamp01(c.z) * 255)),
+        )
+
+
+    def _phong_from_cfg(self, mat_cfg: dict) -> PhongMaterial:
+        return PhongMaterial(
+            ka=float(mat_cfg["ka"]),
+            kd=float(mat_cfg["kd"]),
+            ks=float(mat_cfg["ks"]),
+            ke=float(mat_cfg["ke"]),
+            ambient_color=Vec3(*mat_cfg["ambient_color"]),
+            diffuse_color=Vec3(*mat_cfg["diffuse_color"]),
+            specular_color=Vec3(*mat_cfg["specular_color"]),
+        )
+
 
     def _basis(self) -> tuple[Vec3, Vec3, Vec3]:
         # Unity-like world axes, but we define basis explicitly:
@@ -38,7 +63,7 @@ class Camera:
         direction = (forward * self.focal_distance) + (right * (u * half_w)) + (up * (v * half_h))
         return Ray(self.position, direction.normalized())
     
-    def render(self, world, width, height, materials, background_rgb8):
+    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights):
         from PIL import Image
 
         img = Image.new("RGB", (width, height), background_rgb8)
@@ -58,7 +83,39 @@ class Camera:
                 if hit is None:
                     pix[i, j] = background_rgb8
                 else:
-                    albedo = materials[hit.material_name]["albedo_rgb8"]
-                    pix[i, j] = (int(albedo[0]), int(albedo[1]), int(albedo[2]))
+
+                    light = lights[0]
+                    mat = self._phong_from_cfg(materials[hit.material_name])
+
+                    P = hit.point
+                    N = hit.normal.normalized()
+                    V = (-ray.direction).normalized()  # hit -> camera
+
+                    # Shadow ray: hit point -> light
+                    to_light = light.position - P
+                    light_dist = to_light.length()
+                    Sdir = to_light.normalized()
+
+                    eps = 1e-4
+                    shadow_origin = P + N * eps
+                    shadow_ray = Ray(shadow_origin, Sdir)
+
+                    shadow_hit = world.intersect(shadow_ray, t_min=eps, t_max=light_dist - eps)
+                    in_shadow = shadow_hit is not None
+
+                    # If in shadow: only ambient (we do this by zeroing light contribution)
+                    light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else light.color
+
+                    rgb = shade_phong(
+                        ambient_light_rgb=ambient_light,
+                        light_pos=light.position,
+                        light_rgb=light_rgb,
+                        hit_point=P,
+                        normal=N,
+                        view_dir=V,
+                        mat=mat,
+                    )
+
+                    pix[i, j] = self._vec3_to_rgb8(rgb)
 
         return img

@@ -44,12 +44,17 @@ lights:
     color_rgb: [1.0, 1.0, 1.0]
     intensity: 1.0
     range: 10.0
+  - type: "point"
+    position: [1.0, 2.0, 2.0]
+    color_rgb: [1.0, 1.0, 1.0]
+    intensity: 1.0
+    range: 10.0
 
 materials:
   sphere1:
     ambient_color:  [0.94, 0.94, 0.94]
     diffuse_color:  [0.94, 0.94, 0.94]
-    specular_color: [1.0, 1.0, 1.0]
+    specular_color: [0.94, 0.94, 0.94]
     ka: 0.1
     kd: 0.7
     ks: 0.2
@@ -58,7 +63,7 @@ materials:
   sphere2:
     ambient_color:  [0.67, 0.67, 0.67]
     diffuse_color:  [0.67, 0.67, 0.67]
-    specular_color: [1.0, 1.0, 1.0]
+    specular_color: [0.67, 0.67, 0.67]
     ka: 0.1
     kd: 0.7
     ks: 0.2

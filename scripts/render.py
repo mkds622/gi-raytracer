@@ -77,6 +77,8 @@ def main():
     # Materials
     mats = cfg["materials"]
 
+    ambient_light = Vec3(*cfg["world"]["ambient_light_rgb"])
+
     # Parse lights
     lights = []
     for l in cfg["lights"]:
@@ -87,6 +89,7 @@ def main():
                     color=Vec3(*l["color_rgb"]),
                 )
             )
+    
 
     # Build World
     world = World()
@@ -119,9 +122,11 @@ def main():
         height=height,
         materials=mats,
         background_rgb8=bg_rgb,
+        ambient_light=ambient_light,
+        lights=lights,
     )
 
-    out_path = "outputs/checkpoint2.png"
+    out_path = "outputs/checkpoint3(Basic).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 

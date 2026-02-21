@@ -52,3 +52,7 @@ class Vec3:
 
     def to_tuple(self) -> tuple[float, float, float]:
         return (self.x, self.y, self.z)
+
+    
+    def __neg__(self):
+        return Vec3(-self.x, -self.y, -self.z)
