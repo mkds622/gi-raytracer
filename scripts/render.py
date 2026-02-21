@@ -101,27 +101,13 @@ def main():
                 )
             )
 
-    # Create image
-    img = Image.new("RGB", (width, height), bg_rgb)
-    pix = img.load()
-
-    t_min = 1e-4
-    t_max = 1e30
-
-    # Render loop
-    for j in range(height):
-        v = 1.0 - 2.0 * (j + 0.5) / height
-        for i in range(width):
-            u = -1.0 + 2.0 * (i + 0.5) / width
-
-            ray = cam.generate_ray(u, v)
-            hit = world.intersect(ray, t_min, t_max)
-
-            if hit is None:
-                pix[i, j] = bg_rgb
-            else:
-                albedo = mats[hit.material_name]["albedo_rgb8"]
-                pix[i, j] = rgb8_tuple(albedo)
+    img = cam.render(
+        world=world,
+        width=width,
+        height=height,
+        materials=mats,
+        background_rgb8=bg_rgb,
+    )
 
     out_path = "outputs/checkpoint2.png"
     img.save(out_path)

@@ -37,3 +37,28 @@ class Camera:
         # Point on virtual screen
         direction = (forward * self.focal_distance) + (right * (u * half_w)) + (up * (v * half_h))
         return Ray(self.position, direction.normalized())
+    
+    def render(self, world, width, height, materials, background_rgb8):
+        from PIL import Image
+
+        img = Image.new("RGB", (width, height), background_rgb8)
+        pix = img.load()
+
+        t_min = 1e-4
+        t_max = 1e30
+
+        for j in range(height):
+            v = 1.0 - 2.0 * (j + 0.5) / height
+            for i in range(width):
+                u = -1.0 + 2.0 * (i + 0.5) / width
+
+                ray = self.generate_ray(u, v)
+                hit = world.intersect(ray, t_min, t_max)
+
+                if hit is None:
+                    pix[i, j] = background_rgb8
+                else:
+                    albedo = materials[hit.material_name]["albedo_rgb8"]
+                    pix[i, j] = (int(albedo[0]), int(albedo[1]), int(albedo[2]))
+
+        return img
