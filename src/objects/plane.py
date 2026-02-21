@@ -2,7 +2,8 @@ from __future__ import annotations
 from typing import Optional
 from src.math.vec3 import Vec3
 from src.core.ray import Ray
-from src.objects.base import Hit, Object
+from src.core.intersections import Hit
+from src.objects.base import Object
 
 class Plane(Object):
     def __init__(
@@ -10,20 +11,12 @@ class Plane(Object):
         point: Vec3,
         normal: Vec3,
         material_name: str,
-        cam_pos: Vec3 | None = None,
-        cam_right: Vec3 | None = None,
-        cam_forward: Vec3 | None = None,
-        cam_bounds: dict | None = None,
+        bounds_xz: dict | None = None,
     ):
         super().__init__(material_name)
         self.point = point
         self.normal = normal.normalized()
-
-        # optional camera-relative clipping (your working fix)
-        self.cam_pos = cam_pos
-        self.cam_right = cam_right
-        self.cam_forward = cam_forward
-        self.cam_bounds = cam_bounds
+        self.bounds_xz = bounds_xz
 
     def intersect(self, ray: Ray, t_min: float, t_max: float) -> Optional[Hit]:
         denom = self.normal.dot(ray.direction)
@@ -36,14 +29,10 @@ class Plane(Object):
 
         p = ray.at(t)
 
-        # camera-relative finite floor
-        if self.cam_bounds is not None:
-            v = p - self.cam_pos
-            r = v.dot(self.cam_right)
-            f = v.dot(self.cam_forward)
-
-            if not (self.cam_bounds["right_min"] <= r <= self.cam_bounds["right_max"] and
-                    self.cam_bounds["forward_min"] <= f <= self.cam_bounds["forward_max"]):
+        if self.bounds_xz is not None:
+            cx, cz = self.bounds_xz["center"]
+            hx, hz = self.bounds_xz["half_size"]
+            if not (cx - hx <= p.x <= cx + hx and cz - hz <= p.z <= cz + hz):
                 return None
 
         return Hit(t=t, point=p, normal=self.normal, material_name=self.material_name)

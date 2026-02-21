@@ -3,7 +3,10 @@ from PIL import Image
 
 from src.math.vec3 import Vec3
 from src.core.camera import Camera
-from src.core.intersections import intersect_sphere, intersect_plane
+from src.core.world import World
+from src.objects.sphere import Sphere
+from src.objects.plane import Plane
+
 
 def load_config(path="config/scene.yaml"):
     with open(path, "r") as f:
@@ -47,14 +50,17 @@ def main():
     cfg = load_config()
     cfg = normalize_scene_config(cfg)
 
+    # Resolution
     preset = cfg["render"]["active_preset"]
     res = cfg["render"]["resolution_presets"][preset]
     width, height = int(res["width"]), int(res["height"])
     aspect = width / float(height)
 
+    # Camera
     cam_cfg = cfg["camera"]
     active_cam_preset = cam_cfg["active_camera"]
     active_cam_preset_data = cam_cfg["presets"][active_cam_preset]
+
     cam = Camera(
         position=Vec3(*active_cam_preset_data["position"]),
         look_at=Vec3(*active_cam_preset_data["look_at"]),
@@ -64,63 +70,57 @@ def main():
         focal_distance=float(cam_cfg.get("focal_distance", 1.0)),
     )
 
+    # Background
     bg_rgb = rgb8_tuple(cfg["background"]["color_rgb8"])
 
-    # Material lookup
+    # Materials
     mats = cfg["materials"]
 
+    # Build World
+    world = World()
+
+    for obj in cfg["objects"]:
+        if obj["type"] == "sphere":
+            world.add(
+                Sphere(
+                    center=Vec3(*obj["center"]),
+                    radius=float(obj["radius"]),
+                    material_name=obj["material"],
+                )
+            )
+
+        elif obj["type"] == "plane":
+            world.add(
+                Plane(
+                    point=Vec3(*obj["point"]),
+                    normal=Vec3(*obj["normal"]),
+                    material_name=obj["material"],
+                    bounds_xz=obj.get("bounds_xz")
+                    if obj.get("finite", False)
+                    else None,
+                )
+            )
+
+    # Create image
     img = Image.new("RGB", (width, height), bg_rgb)
     pix = img.load()
 
-    objects = cfg["objects"]
-
-    # Rendering params
     t_min = 1e-4
     t_max = 1e30
 
+    # Render loop
     for j in range(height):
-        # v in [-1,1], top to bottom
         v = 1.0 - 2.0 * (j + 0.5) / height
         for i in range(width):
             u = -1.0 + 2.0 * (i + 0.5) / width
 
             ray = cam.generate_ray(u, v)
+            hit = world.intersect(ray, t_min, t_max)
 
-            closest_t = t_max
-            hit_material = None
-
-            # Intersections (flat color)
-            for obj in objects:
-                if obj["type"] == "sphere":
-                    hit = intersect_sphere(
-                        ray=ray,
-                        center=Vec3(*obj["center"]),
-                        radius=float(obj["radius"]),
-                        material_name=obj["material"],
-                        t_min=t_min,
-                        t_max=closest_t,
-                    )
-                elif obj["type"] == "plane":
-                    hit = intersect_plane(
-                        ray=ray,
-                        point=Vec3(*obj["point"]),
-                        normal=Vec3(*obj["normal"]),
-                        material_name=obj["material"],
-                        t_min=t_min,
-                        t_max=closest_t,
-                        bounds_xz=obj.get("bounds_xz") if obj.get("finite", False) else None
-                    )
-                else:
-                    hit = None
-
-                if hit and hit.t < closest_t:
-                    closest_t = hit.t
-                    hit_material = hit.material_name
-
-            if hit_material is None:
+            if hit is None:
                 pix[i, j] = bg_rgb
             else:
-                albedo = mats[hit_material]["albedo_rgb8"]
+                albedo = mats[hit.material_name]["albedo_rgb8"]
                 pix[i, j] = rgb8_tuple(albedo)
 
     out_path = "outputs/checkpoint2.png"

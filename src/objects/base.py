@@ -1,14 +1,8 @@
 from __future__ import annotations
-from dataclasses import dataclass
 from typing import Optional
 from src.core.ray import Ray
+from src.core.intersections import Hit
 
-@dataclass(frozen=True)
-class Hit:
-    t: float
-    point: "Vec3"
-    normal: "Vec3"
-    material_name: str
 
 class Object:
     def __init__(self, material_name: str):

@@ -11,4 +11,3 @@ Camera rays are generated from a pinhole model using:
 - up
 - vertical field-of-view
 
-Note: Checkpoint 2 uses vector math only (no matrices yet). Matrix conventions will be documented once transforms are introduced.
