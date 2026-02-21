@@ -18,6 +18,9 @@ render:
   active_preset: "quick"
   samples_per_pixel: 1
 
+world:
+  ambient_light_rgb: [0.1, 0.1, 0.1]   # range 0–1
+
 camera:
   presets:
     baseline:
@@ -38,17 +41,37 @@ background:
 lights:
   - type: "point"
     position: [0.0, 3.0, 1.0]
-    color_rgb8: [255, 255, 255]
+    color_rgb: [1.0, 1.0, 1.0]
     intensity: 1.0
     range: 10.0
 
 materials:
   sphere1:
-    albedo_rgb8: [240, 240, 240]
+    ambient_color:  [0.94, 0.94, 0.94]
+    diffuse_color:  [0.94, 0.94, 0.94]
+    specular_color: [1.0, 1.0, 1.0]
+    ka: 0.1
+    kd: 0.7
+    ks: 0.2
+    ke: 32
+
   sphere2:
-    albedo_rgb8: [170, 170, 170]
+    ambient_color:  [0.67, 0.67, 0.67]
+    diffuse_color:  [0.67, 0.67, 0.67]
+    specular_color: [1.0, 1.0, 1.0]
+    ka: 0.1
+    kd: 0.7
+    ks: 0.2
+    ke: 32
+
   floor:
-    albedo_rgb8: [170, 50, 50]
+    ambient_color:  [0.67, 0.2, 0.2]
+    diffuse_color:  [0.67, 0.2, 0.2]
+    specular_color: [0.3, 0.3, 0.3]
+    ka: 0.1
+    kd: 0.7
+    ks: 0.1
+    ke: 16
 
 objects:
   - type: "sphere"
@@ -68,7 +91,7 @@ objects:
     point: [-18.4, 0.0, -18.0] 
     normal: [0.0, 1.0, 0.0]
     material: "floor"
-    finite: Tr
+    finite: True
     unity_plane:
       base_size: 10.0            
       scale: [4.0, 1.0, 4.0] 
