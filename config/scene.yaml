@@ -40,7 +40,7 @@ background:
 
 lights:
   - type: "point"
-    position: [0.0, 3.0, 1.0]
+    position: [-1.0, 3.0, 1.0]
     color_rgb: [2.0, 2.0, 2.0]
     intensity: 1.0
     range: 10.0
@@ -52,24 +52,36 @@ lights:
 
 materials:
   sphere1:
-    model: "phong"
+    model: "ashikhmin_shirley"
     ambient_color:  [0.94, 0.94, 0.94]
     diffuse_color:  [0.94, 0.94, 0.94]
     specular_color: [0.94, 0.94, 0.94]
-    ka: 0.1
-    kd: 0.7
-    ks: 0.2
-    ke: 32
+    #phong_params or blinn_phong_params:
+    # ka: 0.1
+    # kd: 0.7
+    # ks: 0.2
+    # ke: 32
+    #ashikhmin_shirley_params:
+    Rs: 0.5
+    Rd: 0.5
+    nu: 100
+    nv: 3
 
   sphere2:
-    model: "blinn_phong"
+    model: "ashikhmin_shirley"
     ambient_color:  [0.67, 0.67, 0.67]
     diffuse_color:  [0.67, 0.67, 0.67]
     specular_color: [0.67, 0.67, 0.67]
-    ka: 0.1
-    kd: 0.7
-    ks: 0.2
-    ke: 32
+    #phong_params or blinn_phong_params:
+    # ka: 0.1
+    # kd: 0.7
+    # ks: 0.2
+    # ke: 32
+    #ashikhmin_shirley_params:
+    Rs: 0.5
+    Rd: 0.5
+    nu: 100
+    nv: 3
 
   floor:
     model: "phong"
