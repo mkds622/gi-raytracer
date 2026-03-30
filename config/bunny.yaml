@@ -1,0 +1,51 @@
+render:
+  resolution_presets:
+    quick:
+      width: 640
+      height: 480
+  active_preset: "quick"
+
+world:
+  ambient_light_rgb: [0.1, 0.1, 0.1]
+
+camera:
+  presets:
+    baseline:
+      position: [0.0, 0.2, 2.5]
+      look_at: [0.0, -0.5, 0.0]
+  active_camera: "baseline"
+  up: [0.0, 1.0, 0.0]
+  fov_y_degrees: 60.0
+  focal_distance: 1.0
+
+background:
+  mode: "solid"
+  color_rgb8: [135, 206, 235]
+
+lights:
+  - type: "point"
+    position: [2.0, 3.0, 2.0]
+    color_rgb: [2.0, 2.0, 2.0]
+
+materials:
+  bunny:
+    model: "phong"
+    ambient_color: [0.8, 0.8, 0.8]
+    diffuse_color: [0.8, 0.8, 0.8]
+    specular_color: [0.8, 0.8, 0.8]
+    ka: 0.1
+    kd: 0.7
+    ks: 0.2
+    ke: 32
+
+mesh:
+  path: "data/bunny.ply"
+  material: "bunny"
+  normalize: true
+  scale: 1.8
+  translate: [0.0, -0.4, 0.0]
+
+kdtree:
+  max_tris_per_leaf: 8
+  max_depth: 32
+  run_bruteforce: false
