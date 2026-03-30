@@ -41,7 +41,7 @@ background:
 lights:
   - type: "point"
     position: [0.0, 3.0, 1.0]
-    color_rgb: [1.0, 1.0, 1.0]
+    color_rgb: [2.0, 2.0, 2.0]
     intensity: 1.0
     range: 10.0
   - type: "point"
@@ -62,7 +62,7 @@ materials:
     ke: 32
 
   sphere2:
-    model: "phong"
+    model: "blinn_phong"
     ambient_color:  [0.67, 0.67, 0.67]
     diffuse_color:  [0.67, 0.67, 0.67]
     specular_color: [0.67, 0.67, 0.67]

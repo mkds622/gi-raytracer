@@ -58,6 +58,9 @@ class Camera:
         img = Image.new("RGB", (width, height), background_rgb8)
         pix = img.load()
 
+        #sampling buffer
+        buffer = [[Vec3(0.0, 0.0, 0.0) for _ in range(width)] for _ in range(height)]
+
         t_min = 1e-4
         t_max = 1e30
 
@@ -70,9 +73,14 @@ class Camera:
                 hit = world.intersect(ray, t_min, t_max)
 
                 if hit is None:
-                    pix[i, j] = background_rgb8
+                    # pix[i, j] = background_rgb8
+                    buffer[j][i] = Vec3(
+                        background_rgb8[0] / 255.0,
+                        background_rgb8[1] / 255.0,
+                        background_rgb8[2] / 255.0,
+                    )
                 else:
-
+                    # TODO: support multiple lights, for now we just take the first one
                     light = lights[0]
                     mat_cfg = materials[hit.material_name]
 
@@ -105,6 +113,19 @@ class Camera:
                         view_dir=V,
                     )
 
-                    pix[i, j] = self._vec3_to_rgb8(rgb)
+                    # pix[i, j] = self._vec3_to_rgb8(rgb)
+                    buffer[j][i] = rgb
 
+        for j in range(height):
+            for i in range(width):
+                c = buffer[j][i]
+
+                # Simple Reinhard tone reproduction
+                mapped = Vec3(
+                    c.x / (1.0 + c.x),
+                    c.y / (1.0 + c.y),
+                    c.z / (1.0 + c.z),
+                )
+
+                pix[i, j] = self._vec3_to_rgb8(mapped)
         return img

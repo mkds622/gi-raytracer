@@ -126,7 +126,7 @@ def main():
         lights=lights,
     )
 
-    out_path = "outputs/checkpoint3(Basic).png"
+    out_path = "outputs/checkpoint3(BasicToneMapping + BlinnPhong).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 
