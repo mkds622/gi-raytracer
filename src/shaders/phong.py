@@ -27,12 +27,21 @@ def shade_phong(
     hit_point: Vec3,
     normal: Vec3,
     view_dir: Vec3,  # direction from hit -> camera (normalized)
-    mat: PhongMaterial,
+    mat_cfg: dict,
 ) -> Vec3:
     """
     Returns linear RGB (0..inf). No clamping/tone-map here.
     Shadowing is handled outside this function.
     """
+    mat = PhongMaterial(
+        ka=float(mat_cfg["ka"]),
+        kd=float(mat_cfg["kd"]),
+        ks=float(mat_cfg["ks"]),
+        ke=float(mat_cfg["ke"]),
+        ambient_color=Vec3(*mat_cfg["ambient_color"]),
+        diffuse_color=Vec3(*mat_cfg["diffuse_color"]),
+        specular_color=Vec3(*mat_cfg["specular_color"]),
+    )
     n = normal.normalized()
     s = (light_pos - hit_point).normalized()
 

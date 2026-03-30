@@ -52,6 +52,7 @@ lights:
 
 materials:
   sphere1:
+    model: "phong"
     ambient_color:  [0.94, 0.94, 0.94]
     diffuse_color:  [0.94, 0.94, 0.94]
     specular_color: [0.94, 0.94, 0.94]
@@ -61,6 +62,7 @@ materials:
     ke: 32
 
   sphere2:
+    model: "phong"
     ambient_color:  [0.67, 0.67, 0.67]
     diffuse_color:  [0.67, 0.67, 0.67]
     specular_color: [0.67, 0.67, 0.67]
@@ -70,6 +72,7 @@ materials:
     ke: 32
 
   floor:
+    model: "phong"
     ambient_color:  [0.67, 0.2, 0.2]
     diffuse_color:  [0.67, 0.2, 0.2]
     specular_color: [0.3, 0.3, 0.3]

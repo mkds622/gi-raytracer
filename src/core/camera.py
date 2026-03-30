@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from src.math.vec3 import Vec3
 from src.core.ray import Ray
 from src.shaders.phong import PhongMaterial, shade_phong
+from src.shaders.shader_dispatcher import shade
 
 
 @dataclass(frozen=True)
@@ -24,18 +25,6 @@ class Camera:
             int(round(self._clamp01(c.x) * 255)),
             int(round(self._clamp01(c.y) * 255)),
             int(round(self._clamp01(c.z) * 255)),
-        )
-
-
-    def _phong_from_cfg(self, mat_cfg: dict) -> PhongMaterial:
-        return PhongMaterial(
-            ka=float(mat_cfg["ka"]),
-            kd=float(mat_cfg["kd"]),
-            ks=float(mat_cfg["ks"]),
-            ke=float(mat_cfg["ke"]),
-            ambient_color=Vec3(*mat_cfg["ambient_color"]),
-            diffuse_color=Vec3(*mat_cfg["diffuse_color"]),
-            specular_color=Vec3(*mat_cfg["specular_color"]),
         )
 
 
@@ -85,7 +74,7 @@ class Camera:
                 else:
 
                     light = lights[0]
-                    mat = self._phong_from_cfg(materials[hit.material_name])
+                    mat_cfg = materials[hit.material_name]
 
                     P = hit.point
                     N = hit.normal.normalized()
@@ -106,14 +95,14 @@ class Camera:
                     # If in shadow: only ambient (we do this by zeroing light contribution)
                     light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else light.color
 
-                    rgb = shade_phong(
+                    rgb = shade(
+                        material_cfg=mat_cfg,
                         ambient_light_rgb=ambient_light,
                         light_pos=light.position,
                         light_rgb=light_rgb,
                         hit_point=P,
                         normal=N,
                         view_dir=V,
-                        mat=mat,
                     )
 
                     pix[i, j] = self._vec3_to_rgb8(rgb)
