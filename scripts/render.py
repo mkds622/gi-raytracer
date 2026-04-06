@@ -126,7 +126,7 @@ def main():
         lights=lights,
     )
 
-    out_path = "outputs/checkpoint4(Textures-Checkerboard).png"
+    out_path = "outputs/checkpoint4(Textures-Bricks).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 

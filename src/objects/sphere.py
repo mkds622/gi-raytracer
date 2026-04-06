@@ -4,6 +4,8 @@ from src.math.vec3 import Vec3
 from src.core.ray import Ray
 from src.core.intersections import Hit
 from src.objects.base import Object
+import math
+from math import pi, atan2, asin
 
 
 class Sphere(Object):

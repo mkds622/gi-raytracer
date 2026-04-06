@@ -94,6 +94,12 @@ materials:
     # check_size: 1.0
     # color1: [1, 0, 0]
     # color2: [1, 1, 0]
+    texture: "bricks"
+    brick_width: 0.1
+    brick_height: 0.05
+    mortar_thickness: 0.005
+    brick_color: [0.6, 0.15, 0.1]
+    mortar_color: [0.85, 0.85, 0.85]
 
   floor:
     model: "phong"
