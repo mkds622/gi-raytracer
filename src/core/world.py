@@ -14,6 +14,7 @@ class World:
 
     def intersect(self, ray: Ray, t_min: float, t_max: float) -> Optional[Hit]:
         closest_hit = None
+        closest_obj = None
         closest_t = t_max
 
         for obj in self.objects:
@@ -21,5 +22,9 @@ class World:
             if hit and hit.t < closest_t:
                 closest_t = hit.t
                 closest_hit = hit
+                closest_obj = obj
 
-        return closest_hit
+        if closest_hit is None:
+            return None        
+        
+        return closest_hit, closest_obj

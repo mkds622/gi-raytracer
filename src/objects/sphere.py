@@ -37,3 +37,9 @@ class Sphere(Object):
         p = ray.at(t_hit)
         n = (p - self.center).normalized()
         return Hit(t=t_hit, point=p, normal=n, material_name=self.material_name)
+    
+    def get_uv(self, P):
+        p = (P - self.center).normalized()
+        u = 0.5 + atan2(p.z, p.x) / (2*pi)
+        v = 0.5 - asin(p.y) / pi
+        return u, v

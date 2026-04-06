@@ -36,3 +36,7 @@ class Plane(Object):
                 return None
 
         return Hit(t=t, point=p, normal=self.normal, material_name=self.material_name)
+    
+    def get_uv(self, P):
+        local = P - self.point
+        return local.x, local.z

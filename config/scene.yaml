@@ -40,9 +40,9 @@ background:
 
 lights:
   - type: "point"
-    position: [-1.0, 3.0, 1.0]
+    position: [-0.25, 3.5, 3.5]
     color_rgb: [2.0, 2.0, 2.0]
-    intensity: 1.0
+    intensity: 2.0
     range: 10.0
   - type: "point"
     position: [1.0, 2.0, 2.0]
@@ -53,9 +53,9 @@ lights:
 materials:
   sphere1:
     model: "ashikhmin_shirley"
-    ambient_color:  [0.94, 0.94, 0.94]
-    diffuse_color:  [0.94, 0.94, 0.94]
-    specular_color: [0.94, 0.94, 0.94]
+    ambient_color:  [0.8, 0.8, 0.8]
+    diffuse_color:  [0.8, 0.8, 0.8]
+    specular_color: [0.8, 0.8, 0.8]
     #phong_params or blinn_phong_params:
     # ka: 0.1
     # kd: 0.7
@@ -67,21 +67,33 @@ materials:
     nu: 100
     nv: 3
 
+    # Texture:
+    # texture: "checkerboard"
+    # check_size: 1.0
+    # color1: [1, 0, 0]
+    # color2: [1, 1, 0]
+
   sphere2:
-    model: "ashikhmin_shirley"
+    model: "phong"
     ambient_color:  [0.67, 0.67, 0.67]
     diffuse_color:  [0.67, 0.67, 0.67]
     specular_color: [0.67, 0.67, 0.67]
     #phong_params or blinn_phong_params:
-    # ka: 0.1
-    # kd: 0.7
-    # ks: 0.2
-    # ke: 32
+    ka: 0.1
+    kd: 0.7
+    ks: 0.2
+    ke: 32
     #ashikhmin_shirley_params:
-    Rs: 0.5
-    Rd: 0.5
-    nu: 100
-    nv: 3
+    # Rs: 0.5
+    # Rd: 0.5
+    # nu: 100
+    # nv: 3
+
+    # Texture:
+    # texture: "checkerboard"
+    # check_size: 1.0
+    # color1: [1, 0, 0]
+    # color2: [1, 1, 0]
 
   floor:
     model: "phong"
@@ -92,6 +104,12 @@ materials:
     kd: 0.7
     ks: 0.1
     ke: 16
+
+    # Texture:
+    texture: "checkerboard"
+    check_size: 1.0
+    color1: [1, 0, 0]
+    color2: [1, 1, 0]
 
 objects:
   - type: "sphere"
@@ -108,7 +126,7 @@ objects:
 
   - type: "plane"
     name: "floor"
-    point: [-18.4, 0.0, -18.0] 
+    point: [-17.0, 0.0, -18.0] 
     normal: [0.0, 1.0, 0.0]
     material: "floor"
     finite: True

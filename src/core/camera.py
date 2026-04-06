@@ -5,6 +5,7 @@ from src.math.vec3 import Vec3
 from src.core.ray import Ray
 from src.shaders.phong import PhongMaterial, shade_phong
 from src.shaders.shader_dispatcher import shade
+from src.textures.texture_dispatcher import apply_texture
 
 
 @dataclass(frozen=True)
@@ -70,7 +71,12 @@ class Camera:
                 u = -1.0 + 2.0 * (i + 0.5) / width
 
                 ray = self.generate_ray(u, v)
-                hit = world.intersect(ray, t_min, t_max)
+                result = world.intersect(ray, t_min, t_max)
+
+                if result is None:
+                    hit = None
+                else:
+                    hit, obj = result
 
                 if hit is None:
                     # pix[i, j] = background_rgb8
@@ -83,6 +89,7 @@ class Camera:
                     # TODO: support multiple lights, for now we just take the first one
                     light = lights[0]
                     mat_cfg = materials[hit.material_name]
+                    mat_cfg = apply_texture(mat_cfg, hit_point=hit.point, obj=obj)
 
                     P = hit.point
                     N = hit.normal.normalized()
