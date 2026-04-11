@@ -18,8 +18,16 @@ class Vec3:
     def __sub__(self, other: "Vec3") -> "Vec3":
         return Vec3(self.x - other.x, self.y - other.y, self.z - other.z)
 
-    def __mul__(self, s: Number) -> "Vec3":
-        return Vec3(self.x * float(s), self.y * float(s), self.z * float(s))
+    def __mul__(self, other: Union["Vec3", Number]) -> "Vec3":
+        if isinstance(other, Vec3):
+            return Vec3(
+                self.x * other.x,
+                self.y * other.y,
+                self.z * other.z,
+            )
+        else:
+            s = float(other)
+            return Vec3(self.x * s, self.y * s, self.z * s)
 
     def __rmul__(self, s: Number) -> "Vec3":
         return self.__mul__(s)

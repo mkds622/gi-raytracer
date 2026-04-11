@@ -15,11 +15,11 @@ render:
     high:
       width: 2560
       height: 1440
-  active_preset: "quick"
+  active_preset: "high"
   samples_per_pixel: 1
 
 world:
-  ambient_light_rgb: [0.1, 0.1, 0.1]   # range 0–1
+  ambient_light_rgb: [0.25, 0.25, 0.25]   # range 0–1
 
 camera:
   presets:
@@ -41,7 +41,7 @@ background:
 lights:
   - type: "point"
     position: [-0.25, 3.5, 3.5]
-    color_rgb: [2.0, 2.0, 2.0]
+    color_rgb: [1.0, 1.0, 1.0]
     intensity: 2.0
     range: 10.0
   - type: "point"
@@ -53,41 +53,41 @@ lights:
 materials:
   sphere1:
     model: "ashikhmin_shirley"
-    ambient_color:  [0.8, 0.8, 0.8]
-    diffuse_color:  [0.8, 0.8, 0.8]
-    specular_color: [0.8, 0.8, 0.8]
+    ambient_color:  [0.2, 0.2, 0.2]
+    diffuse_color:  [1.0, 1.0, 1.0]
+    specular_color: [1.0, 1.0, 1.0]
     #phong_params or blinn_phong_params:
     # ka: 0.1
     # kd: 0.7
     # ks: 0.2
     # ke: 32
     #ashikhmin_shirley_params:
-    Rs: 0.5
-    Rd: 0.5
-    nu: 100
-    nv: 3
+    Rs: 0.2
+    Rd: 0.8
+    nu: 60
+    nv: 10
 
     # Texture:
-    # texture: "checkerboard"
-    # check_size: 1.0
-    # color1: [1, 0, 0]
-    # color2: [1, 1, 0]
+    texture: "checkerboard"
+    check_size: 0.1
+    color1: [1, 0, 0]
+    color2: [1, 1, 0]
 
   sphere2:
-    model: "phong"
-    ambient_color:  [0.67, 0.67, 0.67]
-    diffuse_color:  [0.67, 0.67, 0.67]
-    specular_color: [0.67, 0.67, 0.67]
+    model: "ashikhmin_shirley"
+    ambient_color:  [0.1, 0.1, 0.1]
+    diffuse_color:  [1.0, 1.0, 1.0]
+    specular_color: [1.0, 1.0, 1.0]
     #phong_params or blinn_phong_params:
-    ka: 0.1
-    kd: 0.7
-    ks: 0.2
-    ke: 32
+    # ka: 0.1
+    # kd: 0.7
+    # ks: 0.2
+    # ke: 32
     #ashikhmin_shirley_params:
-    # Rs: 0.5
-    # Rd: 0.5
-    # nu: 100
-    # nv: 3
+    Rs: 0.05
+    Rd: 0.9
+    nu: 10
+    nv: 10
 
     # Texture:
     # texture: "checkerboard"
