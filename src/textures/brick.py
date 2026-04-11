@@ -1,4 +1,5 @@
 import math
+from src.noise.perlin import perlin
 
 def brick_texture(mat_cfg, **kwargs):
     P = kwargs["hit_point"]
@@ -23,6 +24,23 @@ def brick_texture(mat_cfg, **kwargs):
     u_mod = u % bw
     v_mod = v % bh
 
+    final_result = [0, 0, 0]
+
     if u_mod < mt or v_mod < mt:
-        return mortar_color
-    return brick_color
+        final_result = mortar_color
+    else:
+        final_result = brick_color
+
+    # Add Noise
+    if mat_cfg.get("noise", False):
+        scale = mat_cfg.get("noise_scale", 5.0)
+        amp = mat_cfg.get("noise_amp", 0.1)
+
+        n = perlin(P.x * scale, P.y * scale, P.z * scale)
+
+        final_result = [
+            max(0.0, min(1.0, c + amp * (n - 0.5)))
+            for c in final_result
+        ]
+
+    return final_result
