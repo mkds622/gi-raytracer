@@ -32,6 +32,8 @@ def brick_texture(mat_cfg, **kwargs):
         final_result = brick_color
 
     # Add Noise
+    # NOTE:
+    # Noise is applied per-point (object space) to create intra-surface variation.
     if mat_cfg.get("noise", False):
         scale = mat_cfg.get("noise_scale", 5.0)
         amp = mat_cfg.get("noise_amp", 0.1)
