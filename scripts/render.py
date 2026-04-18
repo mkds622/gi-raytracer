@@ -7,6 +7,7 @@ from src.core.world import World
 from src.objects.sphere import Sphere
 from src.objects.plane import Plane
 from src.core.light import PointLight
+from src.integrators.whitted import WhittedIntegrator
 
 
 def load_config(path="config/scene.yaml"):
@@ -117,6 +118,8 @@ def main():
                 )
             )
 
+    integrator = WhittedIntegrator()
+
     img = cam.render(
         world=world,
         width=width,
@@ -125,7 +128,8 @@ def main():
         background_rgb8=bg_rgb,
         ambient_light=ambient_light,
         lights=lights,
-        max_depth=max_depth
+        max_depth=max_depth,
+        integrator=integrator,
     )
 
     out_path = "outputs/checkpoint5(Recursive Ray Tracing - Reflections)(Phong) (HD).png"

@@ -53,7 +53,7 @@ class Camera:
         direction = (forward * self.focal_distance) + (right * (u * half_w)) + (up * (v * half_h))
         return Ray(self.position, direction.normalized())
     
-    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth):
+    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth, integrator):
         from PIL import Image
 
         img = Image.new("RGB", (width, height), background_rgb8)
@@ -72,7 +72,7 @@ class Camera:
 
                 ray = self.generate_ray(u, v)
 
-                rgb = self.illuminate(
+                rgb = integrator.illuminate(
                     ray, 1, world, materials, background_rgb8, ambient_light, lights, max_depth
                 )
 
@@ -91,72 +91,4 @@ class Camera:
                 )
 
                 pix[i, j] = self._vec3_to_rgb8(mapped)
-        return img
-    
-    def illuminate(self, ray, depth, world, materials, background_rgb8, ambient_light, lights, max_depth):
-        t_min = 1e-4
-        t_max = 1e30
-
-        result = world.intersect(ray, t_min, t_max)
-
-        if result is None:
-            # pix[i, j] = background_rgb8
-            return Vec3(
-                background_rgb8[0] / 255.0,
-                background_rgb8[1] / 255.0,
-                background_rgb8[2] / 255.0,
-            )
-        hit, obj = result
-        # TODO: support multiple lights, for now we just take the first one
-        light = lights[0]
-        mat_cfg = materials[hit.material_name]
-        mat_cfg = apply_texture(mat_cfg, hit_point=hit.point, obj=obj)
-
-        P = hit.point
-        N = hit.normal.normalized()
-        V = (-ray.direction).normalized()  # hit -> camera
-
-        # Shadow ray: hit point -> light
-        to_light = light.position - P
-        light_dist = to_light.length()
-        Sdir = to_light.normalized()
-
-        eps = 1e-4
-        shadow_origin = P + N * eps
-        shadow_ray = Ray(shadow_origin, Sdir)
-
-        shadow_hit = world.intersect(shadow_ray, t_min=eps, t_max=light_dist - eps)
-        in_shadow = shadow_hit is not None
-
-        # If in shadow: only ambient (we do this by zeroing light contribution)
-        light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else light.color
-
-        rgb = shade(
-            material_cfg=mat_cfg,
-            ambient_light_rgb=ambient_light,
-            light_pos=light.position,
-            light_rgb=light_rgb,
-            hit_point=P,
-            normal=N,
-            view_dir=V,
-        )
-
-        kr = mat_cfg.get("kr", 0.0)
-
-        if depth < max_depth and kr > 0.0:
-            I = ray.direction.normalized()
-            R = I - N * 2.0 * I.dot(N)
-
-            eps = 1e-4
-            reflect_origin = P + N * eps
-            reflect_ray = Ray(reflect_origin, R.normalized())
-
-            reflected_color = self.illuminate(
-                reflect_ray, depth + 1,
-                world, materials, background_rgb8, ambient_light, lights, max_depth
-            )
-
-            rgb = rgb + reflected_color * kr
-
-        # pix[i, j] = self._vec3_to_rgb8(rgb)
-        return rgb
+        return img    
