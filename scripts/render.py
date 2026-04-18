@@ -8,6 +8,7 @@ from src.objects.sphere import Sphere
 from src.objects.plane import Plane
 from src.core.light import PointLight
 from src.integrators.whitted import WhittedIntegrator
+from src.integrators.glossy import GlossyIntegrator
 
 
 def load_config(path="config/scene.yaml"):
@@ -118,7 +119,8 @@ def main():
                 )
             )
 
-    integrator = WhittedIntegrator()
+    # integrator = WhittedIntegrator()
+    integrator = GlossyIntegrator()
 
     img = cam.render(
         world=world,
@@ -132,7 +134,7 @@ def main():
         integrator=integrator,
     )
 
-    out_path = "outputs/checkpoint5(Recursive Ray Tracing - Reflections)(Phong) (HD).png"
+    out_path = "outputs/checkpoint5(Recursive Ray Tracing - Reflections)(Extra - Phong-based reflections) (HD).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 
