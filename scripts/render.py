@@ -56,6 +56,7 @@ def main():
     res = cfg["render"]["resolution_presets"][preset]
     width, height = int(res["width"]), int(res["height"])
     aspect = width / float(height)
+    max_depth = cfg["render"]["max_depth"]
 
     # Camera
     cam_cfg = cfg["camera"]
@@ -124,9 +125,10 @@ def main():
         background_rgb8=bg_rgb,
         ambient_light=ambient_light,
         lights=lights,
+        max_depth=max_depth
     )
 
-    out_path = "outputs/checkpoint4(Extra - Noise on all objects) (HD).png"
+    out_path = "outputs/checkpoint5(Recursive Ray Tracing - Reflections)(Phong) (HD).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 
