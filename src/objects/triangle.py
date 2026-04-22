@@ -7,8 +7,8 @@ from src.objects.base import Object
 
 
 class Triangle(Object):
-    def __init__(self, v0: Vec3, v1: Vec3, v2: Vec3, material_name: str):
-        super().__init__(material_name)
+    def __init__(self, v0: Vec3, v1: Vec3, v2: Vec3, material_name: str, ior: float):
+        super().__init__(material_name, ior)
         self.v0 = v0
         self.v1 = v1
         self.v2 = v2

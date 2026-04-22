@@ -104,6 +104,7 @@ def main():
                     center=Vec3(*obj["center"]),
                     radius=float(obj["radius"]),
                     material_name=obj["material"],
+                    ior=obj["ior"]
                 )
             )
 
@@ -116,11 +117,12 @@ def main():
                     bounds_xz=obj.get("bounds_xz")
                     if obj.get("finite", False)
                     else None,
+                    ior=obj["ior"]
                 )
             )
 
-    # integrator = WhittedIntegrator()
-    integrator = GlossyIntegrator()
+    integrator = WhittedIntegrator()
+    # integrator = GlossyIntegrator()
 
     img = cam.render(
         world=world,
@@ -134,7 +136,7 @@ def main():
         integrator=integrator,
     )
 
-    out_path = "outputs/checkpoint5(Recursive Ray Tracing - Reflections)(Extra - Phong-based reflections) (HD).png"
+    out_path = "outputs/checkpoint6 Basic(Refraction) (HD).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 

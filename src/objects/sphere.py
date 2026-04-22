@@ -9,8 +9,8 @@ from math import pi, atan2, asin
 
 
 class Sphere(Object):
-    def __init__(self, center: Vec3, radius: float, material_name: str):
-        super().__init__(material_name)
+    def __init__(self, center: Vec3, radius: float, material_name: str, ior: float):
+        super().__init__(material_name, ior)
         self.center = center
         self.radius = radius
 

@@ -2,6 +2,7 @@ from src.math.vec3 import Vec3
 from src.core.ray import Ray
 from src.textures.texture_dispatcher import apply_texture
 from src.shaders.shader_dispatcher import shade
+import math
 
 
 class WhittedIntegrator:
@@ -71,5 +72,47 @@ class WhittedIntegrator:
             )
 
             rgb = rgb + reflected_color * kr
+        
+        # Transmission (Refraction)
+        kt = mat_cfg.get("kt", 0.0)
+        ior = obj.__dict__.get("ior", 1.0)
+
+        if depth < max_depth and kt > 0.0:
+            I = ray.direction.normalized()
+            
+            # Default to Entering (Air to Glass)
+            eta = 1.0 / ior
+            Nn = N
+            if I.dot(N) > 0: 
+                # WE ARE EXITING (Glass to Air)
+                eta = ior
+                Nn = -N
+            cos_i = -I.dot(Nn)
+            # else:
+            #     # WE ARE ENTERING
+            #     cos_i = -cos_i
+
+            # Standard Snell's Law components
+            k = 1.0 - eta * eta * (1.0 - cos_i * cos_i)
+            
+            if k < 0:
+                # Total Internal Reflection
+                refract_dir = (I - Nn * 2.0 * I.dot(Nn)).normalized()
+                # Push back INSIDE
+                # refract_origin = P + Nn * 1e-3 
+            else:
+                # Refraction
+                refract_dir = ((I * eta) + Nn * (eta * cos_i - math.sqrt(k))).normalized()
+                # Push THROUGH the surface
+                # refract_origin = P - Nn * 1e-3 
+            
+            refract_origin = P - Nn * 1e-4
+
+            refract_ray = Ray(refract_origin, refract_dir)
+            refracted_color = self.illuminate(
+                refract_ray, depth + 1,
+                world, materials, background_rgb8, ambient_light, lights, max_depth
+            )
+            rgb = rgb + refracted_color * kt
 
         return rgb

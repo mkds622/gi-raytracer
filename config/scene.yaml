@@ -17,7 +17,7 @@ render:
       height: 1440
   active_preset: "high"
   samples_per_pixel: 1
-  max_depth: 3
+  max_depth: 5
 
 world:
   ambient_light_rgb: [0.25, 0.25, 0.25]   # range 0–1
@@ -87,37 +87,37 @@ materials:
   sphere2:
     #reflectance and transmittance:
     kr: 0.0
-    kt: 0.0
+    kt: 0.9
 
-    model: "ashikhmin_shirley"
+    model: "phong"
     ambient_color:  [0.1, 0.1, 0.1]
     diffuse_color:  [1.0, 1.0, 1.0]
     specular_color: [1.0, 1.0, 1.0]
     #phong_params or blinn_phong_params:
-    # ka: 0.1
-    # kd: 0.7
-    # ks: 0.2
-    # ke: 32
+    ka: 0.1
+    kd: 0.7
+    ks: 0.2
+    ke: 32
     #ashikhmin_shirley_params:
-    Rs: 0.05
-    Rd: 0.9
-    nu: 10
-    nv: 10
+    # Rs: 0.05
+    # Rd: 0.9
+    # nu: 10
+    # nv: 10
 
     # Texture:
     # texture: "checkerboard"
     # check_size: 1.0
     # color1: [1, 0, 0]
     # color2: [1, 1, 0]
-    texture: "bricks"
-    brick_width: 0.1
-    brick_height: 0.05
-    mortar_thickness: 0.005
-    brick_color: [0.6, 0.15, 0.1]
-    mortar_color: [0.85, 0.85, 0.85]
+    # texture: "bricks"
+    # brick_width: 0.1
+    # brick_height: 0.05
+    # mortar_thickness: 0.005
+    # brick_color: [0.6, 0.15, 0.1]
+    # mortar_color: [0.85, 0.85, 0.85]
 
     # Noise:
-    noise: true
+    noise: false
     noise_scale: 2.0
     noise_amp: 0.03
 
@@ -152,18 +152,21 @@ objects:
     center: [-0.2, 0.5, -1.0]
     radius: 0.5
     material: "sphere1"
+    ior: 1.0
 
   - type: "sphere"
     name: "sphere2"
     center: [0.8, 0.85, 0.6]
     radius: 0.5
     material: "sphere2"
+    ior: 0.95
 
   - type: "plane"
     name: "floor"
     point: [-17.0, 0.0, -18.0] 
     normal: [0.0, 1.0, 0.0]
     material: "floor"
+    ior: 1.0
     finite: True
     unity_plane:
       base_size: 10.0            

@@ -25,7 +25,7 @@ class GlossyIntegrator:
 
         # TODO: support multiple lights, for now we just take the first one
         light = lights[0]
-        mat_cfg = materials[hit.material_name]
+        mat_cfg = materials[hit.material_name].copy()
         mat_cfg = apply_texture(mat_cfg, hit_point=hit.point, obj=obj)
 
         P = hit.point
@@ -97,5 +97,7 @@ class GlossyIntegrator:
                 )
 
             rgb = rgb + kr * (accum * (1.0 / num_samples))
+        
+        #TODO: Implement refraction for glossy, and add shadow attenuation instead of killing light
 
         return rgb

@@ -11,9 +11,10 @@ class Plane(Object):
         point: Vec3,
         normal: Vec3,
         material_name: str,
+        ior: float,
         bounds_xz: dict | None = None,
     ):
-        super().__init__(material_name)
+        super().__init__(material_name, ior)
         self.point = point
         self.normal = normal.normalized()
         self.bounds_xz = bounds_xz
