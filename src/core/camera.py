@@ -1,5 +1,6 @@
 from __future__ import annotations
 import math
+import random
 from dataclasses import dataclass
 from src.math.vec3 import Vec3
 from src.core.ray import Ray
@@ -53,7 +54,7 @@ class Camera:
         direction = (forward * self.focal_distance) + (right * (u * half_w)) + (up * (v * half_h))
         return Ray(self.position, direction.normalized())
     
-    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth, integrator):
+    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth, integrator, samples_per_pixel):
         from PIL import Image
 
         img = Image.new("RGB", (width, height), background_rgb8)
@@ -70,13 +71,22 @@ class Camera:
             for i in range(width):
                 u = -1.0 + 2.0 * (i + 0.5) / width
 
-                ray = self.generate_ray(u, v)
+                color = Vec3(0.0, 0.0, 0.0)
 
-                rgb = integrator.illuminate(
-                    ray, 1, world, materials, background_rgb8, ambient_light, lights, max_depth
-                )
+                for s in range(samples_per_pixel):
+                    # jitter inside pixel
+                    u_jitter = -1.0 + 2.0 * ((i + random.random()) / width)
+                    v_jitter =  1.0 - 2.0 * ((j + random.random()) / height)
 
-                buffer[j][i] = rgb
+                    ray = self.generate_ray(u_jitter, v_jitter)
+
+                    color = color + integrator.illuminate(
+                        ray, 1, world, materials, background_rgb8, ambient_light, lights, max_depth
+                    )
+
+                color = color * (1.0 / samples_per_pixel)
+
+                buffer[j][i] = color
                 
 
         for j in range(height):

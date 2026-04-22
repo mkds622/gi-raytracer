@@ -82,6 +82,8 @@ def main():
 
     ambient_light = Vec3(*cfg["world"]["ambient_light_rgb"])
 
+    samples_per_pixel = cfg["render"]["samples_per_pixel"]
+
     # Parse lights
     lights = []
     for l in cfg["lights"]:
@@ -134,9 +136,10 @@ def main():
         lights=lights,
         max_depth=max_depth,
         integrator=integrator,
+        samples_per_pixel=samples_per_pixel
     )
 
-    out_path = "outputs/checkpoint3 Extra(Multiple lights) (HD).png"
+    out_path = "outputs/checkpoint3 Extra(Supersampling) (HD).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 

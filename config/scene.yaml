@@ -16,7 +16,7 @@ render:
       width: 2560
       height: 1440
   active_preset: "high"
-  samples_per_pixel: 1
+  samples_per_pixel: 4
   max_depth: 9
 
 world:
