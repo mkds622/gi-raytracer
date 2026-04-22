@@ -136,7 +136,7 @@ def main():
         integrator=integrator,
     )
 
-    out_path = "outputs/checkpoint6 Extra(Refraction - Transparency-based shadows) (HD).png"
+    out_path = "outputs/checkpoint3 Extra(Multiple lights) (HD).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 

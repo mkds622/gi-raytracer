@@ -47,8 +47,8 @@ lights:
     range: 10.0
   - type: "point"
     position: [1.0, 2.0, 2.0]
-    color_rgb: [1.0, 1.0, 1.0]
-    intensity: 1.0
+    color_rgb: [3.0, 3.0, 3.0]
+    intensity: 3.0
     range: 10.0
 
 materials:

@@ -21,52 +21,49 @@ class WhittedIntegrator:
 
         hit, obj = result
 
-        # TODO: support multiple lights, for now we just take the first one
-        light = lights[0]
         mat_cfg = materials[hit.material_name]
         mat_cfg = apply_texture(mat_cfg, hit_point=hit.point, obj=obj)
 
         P = hit.point
         N = hit.normal.normalized()
         V = (-ray.direction).normalized()  # hit -> camera
+        # TODO: support multiple lights, for now we just take the first one
+        rgb = Vec3(0.0, 0.0, 0.0)
 
-        # Shadow ray: hit point -> light
-        to_light = light.position - P
-        light_dist = to_light.length()
-        Sdir = to_light.normalized()
+        for light in lights:
 
-        eps = 1e-4
-        shadow_origin = P + N * eps
-        shadow_ray = Ray(shadow_origin, Sdir)
+            # Shadow ray: hit point -> light
+            to_light = light.position - P
+            light_dist = to_light.length()
+            Sdir = to_light.normalized()
 
-        shadow_hit = world.intersect(shadow_ray, t_min=eps, t_max=light_dist - eps)
-        in_shadow = shadow_hit is not None
+            eps = 1e-4
+            shadow_origin = P + N * eps
+            shadow_ray = Ray(shadow_origin, Sdir)
 
-        # If in shadow: only ambient (we do this by zeroing light contribution)
-        # light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else light.color
+            shadow_hit = world.intersect(shadow_ray, t_min=eps, t_max=light_dist - eps)
 
-        light_rgb = light.color
+            light_rgb = light.color
 
-        if in_shadow:
-            shadow_hit_obj = shadow_hit[1]
-            shadow_mat = materials[shadow_hit[0].material_name]
+            if shadow_hit is not None:
+                shadow_hit_info, shadow_obj = shadow_hit
+                shadow_mat = materials[shadow_hit_info.material_name]
+                kt = shadow_mat.get("kt", 0.0)
 
-            kt = shadow_mat.get("kt", 0.0)
+                if kt > 0.0:
+                    light_rgb = light.color * kt
+                else:
+                    light_rgb = Vec3(0.0, 0.0, 0.0)
 
-            if kt > 0:
-                light_rgb = light.color * kt
-            else:
-                light_rgb = Vec3(0.0, 0.0, 0.0)
-
-        rgb = shade(
-            material_cfg=mat_cfg,
-            ambient_light_rgb=ambient_light,
-            light_pos=light.position,
-            light_rgb=light_rgb,
-            hit_point=P,
-            normal=N,
-            view_dir=V,
-        )
+            rgb = rgb + shade(
+                material_cfg=mat_cfg,
+                ambient_light_rgb=ambient_light,
+                light_pos=light.position,
+                light_rgb=light_rgb,
+                hit_point=P,
+                normal=N,
+                view_dir=V,
+            )
 
         # Reflection
         kr = mat_cfg.get("kr", 0.0)
