@@ -43,7 +43,20 @@ class WhittedIntegrator:
         in_shadow = shadow_hit is not None
 
         # If in shadow: only ambient (we do this by zeroing light contribution)
-        light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else light.color
+        # light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else light.color
+
+        light_rgb = light.color
+
+        if in_shadow:
+            shadow_hit_obj = shadow_hit[1]
+            shadow_mat = materials[shadow_hit[0].material_name]
+
+            kt = shadow_mat.get("kt", 0.0)
+
+            if kt > 0:
+                light_rgb = light.color * kt
+            else:
+                light_rgb = Vec3(0.0, 0.0, 0.0)
 
         rgb = shade(
             material_cfg=mat_cfg,

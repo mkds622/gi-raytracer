@@ -17,7 +17,7 @@ render:
       height: 1440
   active_preset: "high"
   samples_per_pixel: 1
-  max_depth: 5
+  max_depth: 9
 
 world:
   ambient_light_rgb: [0.25, 0.25, 0.25]   # range 0–1
@@ -55,7 +55,7 @@ materials:
   sphere1:
     #reflectance and transmittance:
     kr: 0.5
-    kt: 0.0
+    kt: 0.1
 
     model: "phong"
     ambient_color:  [0.2, 0.2, 0.2]
@@ -87,7 +87,7 @@ materials:
   sphere2:
     #reflectance and transmittance:
     kr: 0.0
-    kt: 0.9
+    kt: 0.85
 
     model: "phong"
     ambient_color:  [0.1, 0.1, 0.1]
