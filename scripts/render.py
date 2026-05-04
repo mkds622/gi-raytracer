@@ -146,9 +146,10 @@ def main():
         samples_per_pixel=samples_per_pixel,
         operator=operator,
         Ldmax=Ldmax,
+        tone_cfg=tone_cfg
     )
 
-    out_path = "outputs/checkpoint7 Basic(Tone Reproduction - Reinhard(high)) (HD).png"
+    out_path = "outputs/checkpoint7 Extra(Tone Reproduction - Reinhard(Configurable Key - 0.75)) (HD).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 

@@ -22,6 +22,7 @@ render:
 tone_reproduction:
   operator: reinhard        # or reinhard_simple
   Ldmax: 1.0
+  key: 0.75 # reinhard only
 
 world:
   ambient_light_rgb: [0.25, 0.25, 0.25]   # range 0–1

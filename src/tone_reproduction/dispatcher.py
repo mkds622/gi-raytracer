@@ -3,12 +3,13 @@ from . import ward
 from . import reinhard
 
 
-def apply_tone_reproduction(buffer, operator: str | None, Ldmax: float):
+def apply_tone_reproduction(buffer, operator: str | None, Ldmax: float, config: dict):
     if operator is None:
         operator = "reinhard_simple"
     
     if operator == "reinhard":
-        return reinhard.apply(buffer, Ldmax)
+        key = config.get("key", 0.18)
+        return reinhard.apply(buffer, Ldmax, key)
 
     if operator == "reinhard_simple":
         return reinhard_simple.apply(buffer, Ldmax)

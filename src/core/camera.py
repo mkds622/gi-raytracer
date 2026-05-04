@@ -54,7 +54,7 @@ class Camera:
             (right * (u * half_w)) + (up * (v * half_h))
         return Ray(self.position, direction.normalized())
 
-    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth, integrator, samples_per_pixel, operator=None, Ldmax=1.0):
+    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth, integrator, samples_per_pixel, operator=None, Ldmax=1.0, tone_cfg= {}):
         from PIL import Image
 
         img = Image.new("RGB", (width, height), background_rgb8)
@@ -89,7 +89,7 @@ class Camera:
 
                 buffer[j][i] = color
 
-        mapped_buffer = apply_tone_reproduction(buffer, operator, Ldmax)
+        mapped_buffer = apply_tone_reproduction(buffer, operator, Ldmax, tone_cfg)
 
         for j in range(height):
             for i in range(width):

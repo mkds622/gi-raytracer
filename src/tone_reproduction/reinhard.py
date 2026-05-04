@@ -20,12 +20,12 @@ def _log_average_luminance(buffer, delta=1e-6):
     return math.exp(s / N)
 
 
-def apply(buffer, Ldmax: float):
+def apply(buffer, Ldmax: float, key: float = 0.18):
     h = len(buffer)
     w = len(buffer[0])
 
     Lavg = _log_average_luminance(buffer)
-    a = 0.18
+    a = key
 
     out = [[Vec3(0.0, 0.0, 0.0) for _ in range(w)] for _ in range(h)]
 
