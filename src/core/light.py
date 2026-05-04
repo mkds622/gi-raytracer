@@ -7,3 +7,5 @@ from src.math.vec3 import Vec3
 class PointLight:
     position: Vec3
     color: Vec3  # radiance in 0–1 range
+    intensity: float
+    range: float

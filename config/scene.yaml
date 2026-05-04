@@ -19,6 +19,10 @@ render:
   samples_per_pixel: 4
   max_depth: 9
 
+tone_reproduction:
+  operator: reinhard        # or reinhard_simple
+  Ldmax: 1.0
+
 world:
   ambient_light_rgb: [0.25, 0.25, 0.25]   # range 0–1
 
@@ -42,13 +46,13 @@ background:
 lights:
   - type: "point"
     position: [-0.25, 3.5, 3.5]
-    color_rgb: [2.0, 2.0, 2.0]
-    intensity: 2.0
+    color_rgb: [1.0, 1.0, 1.0]
+    intensity: 10
     range: 10.0
   - type: "point"
     position: [1.0, 2.0, 2.0]
-    color_rgb: [3.0, 3.0, 3.0]
-    intensity: 3.0
+    color_rgb: [1.0, 1.0, 1.0]
+    intensity: 10
     range: 10.0
 
 materials:

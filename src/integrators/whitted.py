@@ -43,7 +43,7 @@ class WhittedIntegrator:
 
             shadow_hit = world.intersect(shadow_ray, t_min=eps, t_max=light_dist - eps)
 
-            light_rgb = light.color
+            light_rgb = light.color * light.intensity
 
             if shadow_hit is not None:
                 shadow_hit_info, shadow_obj = shadow_hit

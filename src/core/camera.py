@@ -7,6 +7,7 @@ from src.core.ray import Ray
 from src.shaders.phong import PhongMaterial, shade_phong
 from src.shaders.shader_dispatcher import shade
 from src.textures.texture_dispatcher import apply_texture
+from src.tone_reproduction.dispatcher import apply_tone_reproduction
 
 
 @dataclass(frozen=True)
@@ -21,7 +22,6 @@ class Camera:
     def _clamp01(self, x: float) -> float:
         return 0.0 if x < 0.0 else 1.0 if x > 1.0 else x
 
-
     def _vec3_to_rgb8(self, c: Vec3) -> tuple[int, int, int]:
         return (
             int(round(self._clamp01(c.x) * 255)),
@@ -29,12 +29,11 @@ class Camera:
             int(round(self._clamp01(c.z) * 255)),
         )
 
-
     def _basis(self) -> tuple[Vec3, Vec3, Vec3]:
         # Unity-like world axes, but we define basis explicitly:
         # forward points from camera to look_at
         forward = (self.look_at - self.position).normalized()
-        right   = self.up.cross(forward).normalized()
+        right = self.up.cross(forward).normalized()
         true_up = forward.cross(right).normalized()
         return right, true_up, forward
 
@@ -51,17 +50,19 @@ class Camera:
         half_w = half_h * self.aspect
 
         # Point on virtual screen
-        direction = (forward * self.focal_distance) + (right * (u * half_w)) + (up * (v * half_h))
+        direction = (forward * self.focal_distance) + \
+            (right * (u * half_w)) + (up * (v * half_h))
         return Ray(self.position, direction.normalized())
-    
-    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth, integrator, samples_per_pixel):
+
+    def render(self, world, width, height, materials, background_rgb8, ambient_light, lights, max_depth, integrator, samples_per_pixel, operator=None, Ldmax=1.0):
         from PIL import Image
 
         img = Image.new("RGB", (width, height), background_rgb8)
         pix = img.load()
 
-        #sampling buffer
-        buffer = [[Vec3(0.0, 0.0, 0.0) for _ in range(width)] for _ in range(height)]
+        # sampling buffer
+        buffer = [[Vec3(0.0, 0.0, 0.0) for _ in range(width)]
+                  for _ in range(height)]
 
         t_min = 1e-4
         t_max = 1e30
@@ -76,7 +77,7 @@ class Camera:
                 for s in range(samples_per_pixel):
                     # jitter inside pixel
                     u_jitter = -1.0 + 2.0 * ((i + random.random()) / width)
-                    v_jitter =  1.0 - 2.0 * ((j + random.random()) / height)
+                    v_jitter = 1.0 - 2.0 * ((j + random.random()) / height)
 
                     ray = self.generate_ray(u_jitter, v_jitter)
 
@@ -87,18 +88,12 @@ class Camera:
                 color = color * (1.0 / samples_per_pixel)
 
                 buffer[j][i] = color
-                
+
+        mapped_buffer = apply_tone_reproduction(buffer, operator, Ldmax)
 
         for j in range(height):
             for i in range(width):
-                c = buffer[j][i]
+                c = mapped_buffer[j][i]
 
-                # Simple Reinhard tone reproduction
-                mapped = Vec3(
-                    c.x / (1.0 + c.x),
-                    c.y / (1.0 + c.y),
-                    c.z / (1.0 + c.z),
-                )
-
-                pix[i, j] = self._vec3_to_rgb8(mapped)
+                pix[i, j] = self._vec3_to_rgb8(c)
         return img    

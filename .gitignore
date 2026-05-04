@@ -9,3 +9,4 @@ outputs/
 
 # data
 *.ply
+.DS_store

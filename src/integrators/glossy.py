@@ -45,7 +45,7 @@ class GlossyIntegrator:
         in_shadow = shadow_hit is not None
 
         # If in shadow: only ambient (we do this by zeroing light contribution)
-        light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else light.color
+        light_rgb = Vec3(0.0, 0.0, 0.0) if in_shadow else (light.color * light.intensity)
 
         rgb = shade(
             material_cfg=mat_cfg,

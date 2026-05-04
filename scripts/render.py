@@ -92,6 +92,8 @@ def main():
                 PointLight(
                     position=Vec3(*l["position"]),
                     color=Vec3(*l["color_rgb"]),
+                    intensity=float(l["intensity"]),
+                    range=float(l["range"])
                 )
             )
     
@@ -122,6 +124,11 @@ def main():
                     ior=obj["ior"]
                 )
             )
+    
+    tone_cfg = cfg["tone_reproduction"]
+
+    operator = tone_cfg.get("operator", "reinhard_simple")
+    Ldmax = tone_cfg.get("Ldmax", 1.0)
 
     integrator = WhittedIntegrator()
     # integrator = GlossyIntegrator()
@@ -136,10 +143,12 @@ def main():
         lights=lights,
         max_depth=max_depth,
         integrator=integrator,
-        samples_per_pixel=samples_per_pixel
+        samples_per_pixel=samples_per_pixel,
+        operator=operator,
+        Ldmax=Ldmax,
     )
 
-    out_path = "outputs/checkpoint3 Extra(Supersampling) (HD).png"
+    out_path = "outputs/checkpoint7 Basic(Tone Reproduction - Reinhard(high)) (HD).png"
     img.save(out_path)
     print(f"Saved: {out_path} ({width}x{height})")
 
